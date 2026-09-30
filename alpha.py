@@ -4,7 +4,7 @@ tree = [
 ]
 
 def alpha_beta(node, alpha, beta, is_max):
-    # Base case: if we reach an integer leaf, return its value
+
     if isinstance(node, int):
         return node
     
@@ -24,7 +24,7 @@ def alpha_beta(node, alpha, beta, is_max):
             
     return val
 
-# Start at root (Layer 0 = Max, Layer 1 = Min, Layer 2 = Max, Layer 3 = Leaves)
+
 optimal_value = alpha_beta(tree, float('-inf'), float('inf'), is_max=True)
 print(f"Optimal Value: {optimal_value}")
 
@@ -33,11 +33,11 @@ print(f"Optimal Value: {optimal_value}")
 def ao_star(n, g, h, sol):
     if n not in g or not g[n]: return h[n]
     
-    # Single-line check for the minimum cost branch
+
     costs = [(sum(h[c] + 1 for c in b), b) for b in g[n]]
     h[n], sol[n] = min(costs, key=lambda x: x[0])
     
-    # Recursively solve chosen children
+
     [ao_star(c, g, h, sol) for c in sol[n]]
     return h[n]
 
