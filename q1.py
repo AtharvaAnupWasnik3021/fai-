@@ -30,22 +30,32 @@ print(f"Optimal Value: {optimal_value}")
 
 
 
-def hill_climbing(curr, neighbors, cost):
+def hill_climbing(curr, neighbors_func, cost_func):
     while True:
-        # Single-line: find the neighbor with the absolute lowest cost
-        best = min(neighbors(curr), key=cost, default=curr)
-        
-        # If no neighbor improves the cost, we have reached the peak (local optimum)
-        if cost(best) >= cost(curr): return curr
-        curr = best
+        neighbors = neighbors_func(curr)
+        if not neighbors: return curr
+        best_neighbor = min(neighbors, key=cost_func)
+        if cost_func(best_neighbor) >= cost_func(curr): return curr
+        curr = best_neighbor
+initial_state = (70, 20, 10)
 
-# --- Test Setup ---
-# A dummy function returning adjacent integers as neighbors
-get_neighbors = lambda x: [x - 1, x + 1]
+def q3_neighbors(state):
 
-# A cost function mimicking a valley (global minimum is at x = 4)
-cost_func = lambda x: (x - 4) ** 2 
+    mapping = {
+        (70, 20, 10): [(60, 30, 10), (80, 10, 10), (70, 10, 20)]
+    }
+    return mapping.get(state, [])
 
-# Run starting from initial state x = 10
-result = hill_climbing(10, get_neighbors, cost_func)
-print(f"Optimal State Found: {result} (Cost: {cost_func(result)})")
+def q3_latency(state):
+    scores = {
+        (70, 20, 10): 85,
+        (60, 30, 10): 62,
+        (80, 10, 10): 98,
+        (70, 10, 20): 55
+    }
+    return scores.get(state, float('inf'))
+
+best_config = hill_climbing(initial_state, q3_neighbors, q3_latency)
+print("\n--- Q3: Hill Climbing Result ---")
+print(f"Optimal Configuration (S1%, S2%, S3%): {best_config}")
+print(f"Lowest Achieved Latency: {q3_latency(best_config)} ms")
