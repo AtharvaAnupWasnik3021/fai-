@@ -30,6 +30,50 @@ print(f"Optimal Value: {optimal_value}")
 
 
 
+cities = ['B','C','D']
+def valid_route(route,city):
+    if len(route)== 1 and route[-1] == "A" and city == "C":
+        return False 
+    if city == "D" and "B" not in route:
+        return False 
+    if city in route :
+        return False
+    return True
+
+def backtract(route):
+    if len(route) == 4 :
+        return route + ["A"]
+    for city in cities:
+        if valid_route(route,city):
+            route.append(city)
+            result = backtract(route)
+            if result :
+                return result 
+            route.pop()
+    return None
+route = backtract(['A'])
+print("valid travel route ")
+print("->".join(route))
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def hill_climbing(curr, neighbors_func, cost_func):
     while True:
         neighbors = neighbors_func(curr)
