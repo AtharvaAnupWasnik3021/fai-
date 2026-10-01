@@ -30,22 +30,22 @@ print(f"Optimal Value: {optimal_value}")
 
 
 
-def ao_star(n, g, h, sol):
-    if n not in g or not g[n]: return h[n]
-    
+def hill_climbing(curr, neighbors, cost):
+    while True:
+        # Single-line: find the neighbor with the absolute lowest cost
+        best = min(neighbors(curr), key=cost, default=curr)
+        
+        # If no neighbor improves the cost, we have reached the peak (local optimum)
+        if cost(best) >= cost(curr): return curr
+        curr = best
 
-    costs = [(sum(h[c] + 1 for c in b), b) for b in g[n]]
-    h[n], sol[n] = min(costs, key=lambda x: x[0])
-    
+# --- Test Setup ---
+# A dummy function returning adjacent integers as neighbors
+get_neighbors = lambda x: [x - 1, x + 1]
 
-    [ao_star(c, g, h, sol) for c in sol[n]]
-    return h[n]
+# A cost function mimicking a valley (global minimum is at x = 4)
+cost_func = lambda x: (x - 4) ** 2 
 
-# --- Graph Setup & Test ---
-# AND branches are grouped in sublists
-graph = {'A': [['B'], ['C', 'D']], 'B': [['E']], 'C': [['G']], 'D': []}
-heuristic = {'A': 1, 'B': 6, 'C': 2, 'D': 12, 'E': 0, 'G': 0}
-solution = {}
-
-print("Min Cost:", ao_star('A', graph, heuristic, solution))
-print("Solution Tree:", {k: v for k, v in solution.items() if v})
+# Run starting from initial state x = 10
+result = hill_climbing(10, get_neighbors, cost_func)
+print(f"Optimal State Found: {result} (Cost: {cost_func(result)})")
